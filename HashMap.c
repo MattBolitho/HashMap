@@ -81,19 +81,19 @@ uint64_t HashMap_SipHash_2_4(HashMapKey const key, uint64_t seed1, uint64_t seed
     int const left = key.length & 7;
     uint64_t b = ((uint64_t)key.length) << 56;
     switch (left) {
-        case 7: 
+        case 7:
             b |= ((uint64_t)bytes[6]) << 48;
-        case 6: 
+        case 6:
             b |= ((uint64_t)bytes[5]) << 40;
-        case 5: 
+        case 5:
             b |= ((uint64_t)bytes[4]) << 32;
-        case 4: 
+        case 4:
             b |= ((uint64_t)bytes[3]) << 24;
-        case 3: 
+        case 3:
             b |= ((uint64_t)bytes[2]) << 16;
-        case 2: 
+        case 2:
             b |= ((uint64_t)bytes[1]) << 8;
-        case 1: 
+        case 1:
             b |= ((uint64_t)bytes[0]); break;
         case 0:
         default: break;
@@ -345,15 +345,12 @@ bool HashMap_Iterate(HashMap* hashMap, HashMap_HashMapIterationFunction const ac
             continue;
         }
 
-        // Invoke action of element at bucket.
+        // Invoke action of element at bucket and all collided entries.
         HashMapNode* node = bucket;
-        action(node->data, userData);
-
-        // Crawl bucket's linked list for collided entries.
-        while (node->next) {
+        do {
             action(node->data, userData);
             node = node->next;
-        }
+        } while(node);
     }
 
     return true;
